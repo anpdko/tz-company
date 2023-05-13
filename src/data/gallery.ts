@@ -11,7 +11,7 @@ import img10 from '../assets/images/10.jpg'
 import img11 from '../assets/images/11.jpg'
 import img12 from '../assets/images/12.jpg'
 
-interface IObjGallery {
+export interface IObjGallery {
    id: number,
    img: string
 }
