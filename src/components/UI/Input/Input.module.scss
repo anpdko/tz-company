@@ -1,0 +1,46 @@
+
+.box_input{
+   position: relative;
+
+   .icon{
+      position: absolute;
+      top:0;
+      bottom: 0;
+      left: 0;
+      width: 3rem;
+
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      i{
+         color: #474747;
+         font-size: 1.5rem;
+         z-index: 1;
+      }
+   }
+   .input{
+      background-color: #fff;
+      border: 0;
+      outline: none;
+      font-size: 1rem;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.6);
+      border-radius: 10px;
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      padding: 15px 20px;
+      font-weight: 500;
+      border: 2px solid transparent;
+      color: #474747;
+      box-sizing: border-box;
+      transition: 0.3s;
+   }
+
+   .input:hover{
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.6);
+   }
+
+   .input:focus{
+      border: 2px solid rgba(0, 0, 0, 0.5);
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.6);
+   }
+}
