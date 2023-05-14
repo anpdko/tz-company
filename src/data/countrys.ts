@@ -1,5 +1,5 @@
 
-const countrys:string[] = [
+const countrysData:string[] = [
    "France",
    "China",
    "United Kingdom",
@@ -207,4 +207,4 @@ const countrys:string[] = [
    "UK"
 ]
 
-export default countrys
+export default countrysData
