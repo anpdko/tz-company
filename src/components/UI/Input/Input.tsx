@@ -46,7 +46,7 @@ const Input = ({ className, value, setValue, children, list, type = 'text', plac
             onChange={(e) => handleChange(e)}
             value={value}
          />
-
+         
          <ul>
             {!!value.length && filteredList.map((suggestion) => (
                   <li key={suggestion} onClick={() => handleSelect(suggestion)}>

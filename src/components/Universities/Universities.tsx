@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import s from './Universities.module.scss'
 import Input from '../UI/Input/Input';
 import Button from '../UI/Button/Button';
@@ -18,47 +18,102 @@ interface IUniversity {
 const Universities = () => {
    const [universities, setUniversities] = useState<IUniversity[]>([])
    const [inputCountry, setInputCountry] = useState<string>('')
+   const [title, setTitle] = useState<string>('')
+   const [bookmarks, setBookmarks] = useState<IUniversity[]>([])
 
    const getUniversities = async () => {
       if (inputCountry) {
          const res = await axios.get(`http://universities.hipolabs.com/search?country=${inputCountry}`)
-         setUniversities(res.data.map((item:IUniversity) => {return {...item, bookmark: false}}))
+         const data = res.data.slice(0, res.data.length / 2) // Убираем повторяющийся
+         setTitle(data[0].country)
+         changeUniversitiesBookmark(data)
       }
       else {
          alert('Please fill in all fields')
       }
    }
 
-   const changeBookmark = (name:string) => {
-      setUniversities(universities.map((university) => {
-         if(university.name === name) {
-            return { ...university, bookmark: !university.bookmark}
+   const changeBookmark = async (university: IUniversity) => {
+      try {
+         let newBookmarks = bookmarks
+
+         // Добавление или удаление в localStorage
+         if (!isBookmark(bookmarks, university)) {
+            newBookmarks.push(university);
+         } else {
+            newBookmarks = bookmarks.filter((bookmark: IUniversity) => bookmark.name !== university.name)
          }
-         return university
+         setBookmarks(newBookmarks)
+         await localStorage.setItem('bookmarkUniversities', JSON.stringify(newBookmarks));
+
+         setUniversities(universities.map((item) => {
+            if (item.name === university.name) {
+               return { ...university, bookmark: !university.bookmark };
+            }
+            return item;
+         }));
+      } catch (error) {
+         console.error(error);
+      }
+   };
+
+   const changeUniversitiesBookmark = (universities: IUniversity[]) => {
+      // Добавляем поле bookmark
+      setUniversities(universities.map((item: IUniversity) => {
+         if (isBookmark(bookmarks, item)) {
+            return { ...item, bookmark: true }
+         }
+         return { ...item, bookmark: false }
       }))
    }
+
+
+   const showBookmarks = () => {
+      setUniversities(bookmarks)
+      setTitle('Bookmarks')
+      changeUniversitiesBookmark(bookmarks)
+   }
+
+   const getBookmarks = () => {
+      const bookmarksData = localStorage.getItem('bookmarkUniversities');
+      let bookmarks = bookmarksData ? JSON.parse(bookmarksData) : [];
+      return Array.isArray(bookmarks) ? bookmarks : [];
+   };
+
+   const isBookmark = (bookmarks: IUniversity[], university: IUniversity) => {
+      return bookmarks.some((bookmark) => bookmark.name === university.name);
+   };
+
+   useEffect(() => {
+      const bookmarks = getBookmarks()
+      setBookmarks(bookmarks)
+   }, [])
+
 
    const reset = () => {
       setUniversities([])
       setInputCountry('')
    }
 
-   useEffect(() => {
-      console.log(universities)
-   }, [universities])
-
    return (
       <div className={s.universities}>
          <div className={s.control}>
+            <div data-count={bookmarks.length} className={s.bookmarks} onClick={showBookmarks}>
+               <i className="bi bi-bookmarks-fill"></i>
+            </div>
             <Input
                placeholder='country...'
                value={inputCountry}
                setValue={setInputCountry}
                list={countrysData}
             ><i className="bi bi-globe-europe-africa"></i></Input>
-            <Button onClick={getUniversities}>SEND</Button>
-            <Button onClick={reset}>RESET</Button>
+            <div className={s.btns}>
+               <Button onClick={getUniversities}>SEND</Button>
+               <Button onClick={reset}>RESET</Button>
+            </div>
+
          </div>
+         <h2>{title}</h2>
          <ol className={s.list_university}>
             {universities.map((university, index) =>
                <li key={index} className={s.item}>
@@ -67,8 +122,8 @@ const Universities = () => {
                      <span className={s.right_box}>
                         <a target="_blank" rel="noreferrer" href={university.web_pages[0]}>{university.web_pages[0]}</a>
                         {university.bookmark
-                        ? <i onClick={()=>changeBookmark(university.name)} className="bi bi-bookmark-check-fill"></i>
-                        : <i onClick={()=>changeBookmark(university.name)} className="bi bi-bookmark-plus"></i>
+                           ? <i onClick={() => changeBookmark(university)} className="bi bi-bookmark-check-fill"></i>
+                           : <i onClick={() => changeBookmark(university)} className="bi bi-bookmark-plus"></i>
                         }
                      </span>
                   </span>
