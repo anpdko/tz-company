@@ -43,4 +43,29 @@
       border: 2px solid rgba(0, 0, 0, 0.5);
       box-shadow: 0 1px 3px rgba(0, 0, 0, 0.6);
    }
+
+
+
+   ul{
+      position: absolute;
+      top: 60px;
+      left: 0;
+      right: 0;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.6);
+      border-radius: 10px;
+      margin: 0;
+      padding: 0;
+      overflow: hidden;
+
+      li{
+         list-style: none;
+         padding: 10px 15px;
+         border-bottom: 1px solid rgba(0, 0, 0, 0.3);
+         cursor: pointer;
+      }
+      li:hover{
+         background-color: rgba(0, 0, 0, 0.5);
+         color: #fff;
+      }
+   }
 }

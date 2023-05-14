@@ -6,7 +6,7 @@ import axios from 'axios';
 import countrys from '../../data/countrys'
 
 const Universities = () => {
-   const [inputCountry, setinputCountry] = useState<string>('')
+   const [inputCountry, setInputCountry] = useState<string>('')
 
    const getUniversities = async () => {
       console.log(countrys)
@@ -25,7 +25,8 @@ const Universities = () => {
             <Input 
                placeholder='country...'
                value={inputCountry}
-               onChange={(e) => setinputCountry(e.target.value)}
+               setValue={setInputCountry}
+               list={countrys}
             ><i className="bi bi-globe-europe-africa"></i></Input>
             <Button onClick={getUniversities}>SEND</Button>
             <Button>RESET</Button>
