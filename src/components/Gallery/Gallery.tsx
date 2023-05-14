@@ -4,6 +4,7 @@ import galleryData, {IObjGallery} from '../../data/gallery'
 import useTime from '../../hooks/useTime'
 import PopUpImages from '../PopUpImages/PopUpImages'
 import Button from '../UI/Button/Button'
+import gsap from 'gsap'
 
 
 const Gallery = () => {
@@ -13,8 +14,18 @@ const Gallery = () => {
 
    const deleteGalleryImg = (id:number) => {
       const filterGallery = gallery.filter(item => item.id !== id)
-      setGallery(filterGallery)
-      localStorage.setItem('gallery', JSON.stringify(filterGallery))
+      
+      // анимация удаления выбранного элемента
+      gsap.to(`#box-${id}`, {
+         duration: 0.3,
+         opacity: 0,
+         scale: 0.6,
+         ease: 'power2.out',
+         onComplete: () => {
+            setGallery(filterGallery)
+            localStorage.setItem('gallery', JSON.stringify(filterGallery))
+         }
+      })
    }
 
    useEffect(() => {
@@ -40,7 +51,7 @@ const Gallery = () => {
          </div>
          <div className={s.gallery}>
             {gallery.map(item =>
-               <div key={item.id} className={s.box_img}>
+               <div key={item.id} className={s.box_img} id={`box-${item.id}`}>
                   <img onClick={() => setActiveImg(item.img)} src={item.img} alt="img" />
                   <div className={s.btn_delete} onClick={() => deleteGalleryImg(item.id)}>
                      <i className="bi bi-x-lg"></i>
