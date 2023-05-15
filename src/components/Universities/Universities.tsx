@@ -4,6 +4,7 @@ import Input from '../UI/Input/Input';
 import Button from '../UI/Button/Button';
 import axios from 'axios';
 import countrysData from '../../data/countrys'
+import Loader from '../Loader/Loader';
 
 interface IUniversity {
    alpha_two_code: string;
@@ -20,13 +21,16 @@ const Universities = () => {
    const [inputCountry, setInputCountry] = useState<string>('')
    const [title, setTitle] = useState<string>('')
    const [bookmarks, setBookmarks] = useState<IUniversity[]>([])
+   const [loader, setLoader] = useState(false)
 
    const getUniversities = async () => {
       if (inputCountry) {
+         setLoader(true)
          const res = await axios.get(`http://universities.hipolabs.com/search?country=${inputCountry}`)
          const data = res.data.slice(0, res.data.length / 2) // Убираем повторяющийся
          setTitle(data[0].country)
          changeUniversitiesBookmark(data)
+         setLoader(false)
       }
       else {
          alert('Please fill in all fields')
@@ -111,25 +115,27 @@ const Universities = () => {
                <Button onClick={getUniversities}>SEND</Button>
                <Button onClick={reset}>RESET</Button>
             </div>
-
          </div>
-         <h2>{title}</h2>
-         <ol className={s.list_university}>
-            {universities.map((university, index) =>
-               <li key={index} className={s.item}>
-                  <span className={s.between}>
-                     <h3>{university.name}</h3>
-                     <span className={s.right_box}>
-                        <a target="_blank" rel="noreferrer" href={university.web_pages[0]}>{university.web_pages[0]}</a>
-                        {university.bookmark
-                           ? <i onClick={() => changeBookmark(university)} className="bi bi-bookmark-check-fill"></i>
-                           : <i onClick={() => changeBookmark(university)} className="bi bi-bookmark-plus"></i>
-                        }
-                     </span>
-                  </span>
-               </li>
-            )}
-         </ol>
+         {loader
+            ? <Loader />
+            : <div>
+               <h2>{title}</h2>
+               <ol className={s.list_university}>
+                  {universities.map((university, index) =>
+                     <li key={index} className={s.item}>
+                        <span className={s.between}>
+                           <h3>{university.name}</h3>
+                           <a target="_blank" rel="noreferrer" href={university.web_pages[0]}>{university.web_pages[0]}</a>
+                           {university.bookmark
+                              ? <i onClick={() => changeBookmark(university)} className="bi bi-bookmark-check-fill"></i>
+                              : <i onClick={() => changeBookmark(university)} className="bi bi-bookmark-plus"></i>
+                           }
+                        </span>
+                     </li>
+                  )}
+               </ol>
+            </div>
+         }
       </div>
    );
 };
