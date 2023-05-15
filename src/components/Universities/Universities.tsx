@@ -26,7 +26,7 @@ const Universities = () => {
    const getUniversities = async () => {
       if (inputCountry) {
          setLoader(true)
-         const res = await axios.get(`http://universities.hipolabs.com/search?country=${inputCountry}`)
+         const res = await axios.get(`https://cors-anywhere.herokuapp.com/http://universities.hipolabs.com/search?country=${inputCountry}`)
          const data = res.data.slice(0, res.data.length / 2) // Убираем повторяющийся
          setTitle(data[0].country)
          changeUniversitiesBookmark(data)
