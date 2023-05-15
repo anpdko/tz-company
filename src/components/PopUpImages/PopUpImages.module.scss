@@ -37,6 +37,12 @@
             font-size: 40px;
             cursor: pointer;
             color: white;
+            transition: 0.2s;
+         }
+
+         i:hover {
+            color: #ffd500;
+            transform: scale(1.1);
          }
       }
    }

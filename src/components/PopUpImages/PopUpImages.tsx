@@ -14,7 +14,7 @@ const PopUpImages = ({ img, setImg }: IPopUpImages) => {
    useEffect(() => {
       if (boxRef.current) {
          gsap.set(boxRef.current, { autoAlpha: 0, scale: 0.5, y: -100 })
-         gsap.to(boxRef.current, { duration: 0.5, autoAlpha: 1, scale: 1, y: 0 })
+         gsap.to(boxRef.current, { duration: 0.4, autoAlpha: 1, scale: 1, y: 0 })
          gsap.to(backgroundRef.current, { duration: 0.2, background: 'rgba(0, 0, 0, 0.7)' })
       }
    }, [img])
